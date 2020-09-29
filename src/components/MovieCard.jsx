@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -6,7 +7,6 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import StarRateIcon from '@material-ui/icons/StarRate';
-import MovieDialog from './MovieDialog';
 
 const useStyles = makeStyles({
   card: {
@@ -20,12 +20,11 @@ const useStyles = makeStyles({
 
 export default function MovieCard({ movie }) {
   const classes = useStyles();
-
-  const [open, setOpen] = useState(false);
+  const history = useHistory();
 
   return (
     <Grid item className={classes.gridItem}>
-      <Card className={classes.card} onClick={e => setOpen(true)}>
+      <Card className={classes.card} onClick={e => history.push(`movie/${movie.id}`)}>
         <CardMedia
           component="img"
           alt="Background img"
@@ -50,11 +49,6 @@ export default function MovieCard({ movie }) {
             </Grid> 
           </Grid>
         </CardContent>
-        <MovieDialog
-          open={open}
-          setOpen={setOpen}
-          movie={movie}
-        />
       </Card>
     </Grid>
   );

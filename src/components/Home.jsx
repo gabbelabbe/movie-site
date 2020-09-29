@@ -26,7 +26,7 @@ export default function Home({ ratingRange, allMovies, setAllMovies, setError })
 
   const getNewMovies = async (query) => {
     const modifiedMovieQuery = encodeURIComponent(query);
-    let response = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=9a2ba5c81b06f1077aea9307f97727bc&language=en-US&query=${modifiedMovieQuery}&page=1&include_adult=true`);
+    let response = await fetch(`${process.env.REACT_APP_BASE_SEARCH_URL}/movie?api_key=${process.env.REACT_APP_API_KEY}&language=en-US&query=${modifiedMovieQuery}&page=1&include_adult=true`);
     response = await response.json();
     if (response.results.length === 0) {
       setError(true);
