@@ -14,7 +14,7 @@ export default function MovieDialog({ open, setOpen, movie }) {
   
   useEffect(() => {
     const getStars = async () => {
-      let response = await fetch(`https://api.themoviedb.org/3/movie/${movie.id}/credits?api_key=9a2ba5c81b06f1077aea9307f97727bc`);
+      let response = await fetch(`${process.env.REACT_APP_BASE_TMDB_URL}/${movie.id}/credits?api_key=${process.env.REACT_APP_API_KEY}`);
       response = await response.json();
       let tempStarsArr = [];
       for (let i = 0; i < 3; i++) {
@@ -27,7 +27,7 @@ export default function MovieDialog({ open, setOpen, movie }) {
     }
 
     const getYoutubeLink = async () => {
-      let response = await fetch(`http://api.themoviedb.org/3/movie/${movie.id}/videos?api_key=9a2ba5c81b06f1077aea9307f97727bc`);
+      let response = await fetch(`${process.env.REACT_APP_BASE_TMDB_URL}/${movie.id}/videos?api_key=${process.env.REACT_APP_API_KEY}`);
       response = await response.json();
       if (response.results.length !== 0) {
         setYoutubeLink(`https://youtube.com/watch?v=${response.results[0].key}`);
@@ -50,7 +50,7 @@ export default function MovieDialog({ open, setOpen, movie }) {
       <Grid container spacing={2}>
           <Grid item>
             <ButtonBase>
-              <img src={`http://image.tmdb.org/t/p/w154/${movie.poster_path}`} alt='Poster Img' />
+              <img src={`https://image.tmdb.org/t/p/w154/${movie.poster_path}`} alt='Poster Img' />
             </ButtonBase>
           </Grid>
           <Grid item xs={12} sm container>
@@ -69,22 +69,17 @@ export default function MovieDialog({ open, setOpen, movie }) {
                   null
                 }
               </Grid>
-              <Grid item container>
-                <Grid item>
-                  <StarRateIcon />
-                </Grid>
-                <Grid item>
-                  <Typography variant='overline'>
-                    {movie.vote_average}
-                  </Typography>
-                </Grid> 
+              <Grid item>
+                <StarRateIcon />
+                <Typography variant='overline'>
+                  {movie.vote_average}
+                </Typography>
               </Grid>
             </Grid>
           </Grid>
           {youtubeLink ?
             <Grid item>
               <ReactPlayer
-                
                 url={youtubeLink}
               /> 
             </Grid>

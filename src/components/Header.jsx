@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -39,21 +40,14 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function Header({ ratingRange, setRatingRange, setMovies }) {
+export default function Header({ ratingRange, setRatingRange, error, setError }) {
   const classes = useStyles();
+  const history = useHistory();
+
   const [movieQuery, setMovieQuery] = useState('');
-  const [error, setError] = useState(false);
 
   const handleSumbit = async () => {
-    const modifiedMovieQuery = movieQuery.split(' ').join('%20');
-    let response = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=9a2ba5c81b06f1077aea9307f97727bc&language=en-US&query=${modifiedMovieQuery}&page=1&include_adult=true`);
-    response = await response.json();
-    if (response.results.length === 0) {
-      setError(true);
-    } else {
-      setError(false);
-      setMovies(response.results);
-    }
+    history.push(`?search=${movieQuery}`);
   }
 
   return (
