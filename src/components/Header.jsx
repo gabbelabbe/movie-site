@@ -47,7 +47,7 @@ export default function Header({ ratingRange, setRatingRange, error, setError })
   const [movieQuery, setMovieQuery] = useState('');
 
   const handleSumbit = async () => {
-    history.push(`?search=${movieQuery}`);
+    history.replace(`/?search=${movieQuery}`);
   }
 
   return (

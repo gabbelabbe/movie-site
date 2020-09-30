@@ -29,7 +29,7 @@ export default function MovieCard({ movie }) {
           component="img"
           alt="Background img"
           height="185"
-          image={movie.backdrop_path ? `https://image.tmdb.org/t/p/w500/${movie.backdrop_path}` : `https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
+          image={movie.backdrop_path ? `https://image.tmdb.org/t/p/w500/${movie.backdrop_path}` : `https://images.unsplash.com/photo-1574267432553-4b4628081c31?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2089&q=80`}
           />
         <CardContent>
           <Typography gutterBottom variant="h5" component="h2" noWrap>

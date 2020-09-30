@@ -4,6 +4,7 @@ import MovieCard from './MovieCard';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { Typography } from '@material-ui/core';
 
 const useStyles = makeStyles({
   grid: {
@@ -52,7 +53,9 @@ export default function Home({ ratingRange, allMovies, setAllMovies, setError })
   }, [query])
 
   useEffect(() => {
-    getMovies();
+    if (!allMovies) {
+      getMovies();
+    }
   }, []);
   
   useEffect(() => {
@@ -71,12 +74,17 @@ export default function Home({ ratingRange, allMovies, setAllMovies, setError })
   }
 
   return (
-    <Grid container spacing={3} className={classes.grid}>
-      {filteredMovies.length ? (
-        generateMovieCards()
-      ): (
-        <CircularProgress />
-      )}
-    </Grid>
+    <div>
+      <Typography gutterBottom variant='h1'>
+        {query ? ('Results for ' + query) : ('Popular Movies')}
+      </Typography>
+      <Grid container spacing={3} className={classes.grid}>
+        {allMovies.length ? (
+          generateMovieCards()
+        ): (
+          <CircularProgress />
+        )}
+      </Grid>
+    </div>
   );
 }
