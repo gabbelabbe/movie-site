@@ -75,10 +75,10 @@ export default function Home({ ratingRange, allMovies, setAllMovies, setError })
 
   return (
     <div>
-      <Typography gutterBottom variant='h1'>
+      <Typography gutterBottom variant='h3' style={{marginTop: '0.35em'}}>
         {query ? ('Results for ' + query) : ('Popular Movies')}
       </Typography>
-      <Grid container spacing={3} className={classes.grid}>
+      <Grid container className={classes.grid}>
         {allMovies.length ? (
           generateMovieCards()
         ): (

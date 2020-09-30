@@ -5,10 +5,10 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
-import InputAdornment from '@material-ui/core/InputAdornment';
 import SearchIcon from '@material-ui/icons/Search';
 import Slider from '@material-ui/core/Slider';
 import StarRateIcon from '@material-ui/icons/StarRate';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 const useStyles = makeStyles((theme) => ({
   toolBar: {
@@ -24,79 +24,129 @@ const useStyles = makeStyles((theme) => ({
   },
   form: {
     margin: 'auto',
+    display: 'flex',
+    alignItems: 'center',
+    paddingTop: 30
   },
   textField: {
-    paddingTop: 30,
-    width: 260
+    width: 260,
   },
   appBar: {
     height: 80,
   },
-  slider: {
+  sliderRoot: {
     color: 'white'
   },
-  thumb: {
+  valueLabel: {
     color: 'gray'
+  },
+  starIcon: {
+    paddingTop: 40,
+    marginRight: 10
+  },
+  slider: {
+    paddingTop: 50,
+    width: 200
+  },
+
+  /*------MOBILE------*/
+
+  mobileAppBar: {
+    height: 56
+  },
+  mobileForm: {
+    margin: 'auto',
+    display: 'flex',
+    alignItems: 'center',
+  },
+  mobileTitle: {
+    position: 'relative',
+  },
+  mobileStarIcon: {
+    marginRight: 10
+  },
+  mobileSlider: {
+    padding: 0,
+    width: 200
   }
 }));
 
 export default function Header({ ratingRange, setRatingRange, error, setError }) {
   const classes = useStyles();
   const history = useHistory();
+  const isDesktop = useMediaQuery('(min-width:600px)');
 
   const [movieQuery, setMovieQuery] = useState('');
+  const [showSearchBar, setShowSearchBar] = useState(false);
+  const [showRating, setShowRating] = useState(false);
 
   const handleSumbit = async () => {
     history.replace(`/?search=${movieQuery}`);
   }
 
   return (
-    <AppBar position="sticky" className={classes.appBar}>
+    <AppBar position="sticky" className={isDesktop ? classes.appBar : classes.mobileAppBar}>
       <Toolbar className={classes.toolBar}>
-        <Typography variant="h6" className={classes.title} >
-          Movie-Finder
+        <Typography variant="h6" className={isDesktop ? classes.title : classes.mobileTitle} onClick={e => history.push('/')}>
+          {isDesktop ? 'Movie-Finder' : 'MF'}
         </Typography>
         <form 
-          className={classes.form} 
+          className={isDesktop ? classes.form : classes.mobileForm} 
           onSubmit={e => {
             e.preventDefault();
             handleSumbit();
           }}>
-          <TextField
-            className={classes.textField}
-            onChange={e => {
-              setMovieQuery(e.target.value);
-              setError(false);
+          <SearchIcon 
+            style={{color: 'white'}}
+            onClick={e => {
+              setShowRating(false);
+              setShowSearchBar(!showSearchBar);
             }}
-            placeholder='Search for an awesome movie'
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon style={{color: 'white'}} />
-                </InputAdornment>
-              ),
-              style: {
-                color: '#fff',
-              }
-            }}
-            error={error}
           />
+          {isDesktop || showSearchBar ? (
+            <TextField
+              className={classes.textField}
+              onChange={e => {
+                setMovieQuery(e.target.value);
+                setError(false);
+              }}
+              placeholder='Search for an awesome movie'
+              InputProps={{
+                style: {
+                  color: '#fff',
+                }
+              }}
+              error={error}
+            />
+          ) : (
+            null
+          )}
         </form>
-        <StarRateIcon style={{paddingTop: 40, marginRight: 10}} />
-        <Slider
-          style={{width: 200, paddingTop: 50}} 
-          value={ratingRange}
-          onChange={(e, newRange) => {setRatingRange(newRange)}}
-          valueLabelDisplay="auto"
-          min={1}
-          max={10}
-          step={1}
-          aria-labelledby="range-slider"
-          classes={{
-            root: classes.slider,
-            valueLabel: classes.thumb
+        <StarRateIcon 
+          className={isDesktop ? classes.starIcon : classes.mobileStarIcon} 
+          onClick={e => {
+            setShowSearchBar(false);
+            setShowRating(!showRating)
           }}
         />
+        {isDesktop || showRating ? (
+           <Slider
+              className={isDesktop ? classes.slider : classes.mobileSlider} 
+              value={ratingRange}
+              onChange={(e, newRange) => {setRatingRange(newRange)}}
+              valueLabelDisplay="auto"
+              min={1}
+              max={10}
+              step={1}
+              aria-labelledby="range-slider"
+              classes={{
+                root: classes.sliderRoot,
+                valueLabel: classes.valueLabel
+              }}
+            />
+          ) : (
+            null
+          )}
       </Toolbar>
     </AppBar>
   );

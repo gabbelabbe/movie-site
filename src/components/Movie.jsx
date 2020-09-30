@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import StarRateIcon from '@material-ui/icons/StarRate';
 import ReactPlayer from 'react-player';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 const useStyles = makeStyles({
   backdrop: {
@@ -21,6 +22,7 @@ const useStyles = makeStyles({
 export default function MovieDialog(props) {
   const id = props.match.params.id;
   const classes = useStyles();
+  const isDesktop = useMediaQuery('(min-width:600px)');
 
   const [movie, setMovie] = useState({});
   const [stars, setStars] = useState(false);
@@ -65,66 +67,80 @@ export default function MovieDialog(props) {
   }, [movie]);
 
   return (
-    <div>
+    <div style={isDesktop ? null : {background: 'rgba(0, 0, 0, 0.75)'}}>
       {Object.keys(movie).length ? ( 
-        <Grid container spacing={3} style={{textAlign: 'left'}}>
-          <img
-            className={classes.backdrop}
-            alt='A nice Backdrop :)'
-            src={movie.backdrop_path ? `https://image.tmdb.org/t/p/w500/${movie.backdrop_path}` : `https://images.unsplash.com/photo-1574267432553-4b4628081c31?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2089&q=80`}
-          />
-          <Grid item xs={12} style={{marginTop: '30vh'}} />
-          <Grid item>
-            <img src={`https://image.tmdb.org/t/p/w154/${movie.poster_path}`} alt='Poster Img' />
+        <Grid
+          container
+          spacing={3}
+          style={{
+            textAlign: isDesktop ? ('left') : ('center'),
+            justifyContent: 'center'
+          }}
+          direction={isDesktop ? 'row' : 'column'}
+        >
+          {isDesktop ? (
+            <img
+              className={classes.backdrop}
+              alt='A nice Backdrop :)'
+              src={movie.backdrop_path ? `https://image.tmdb.org/t/p/w500/${movie.backdrop_path}` : `https://images.unsplash.com/photo-1574267432553-4b4628081c31?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2089&q=80`}
+            />
+          ) : (
+            null
+          )}
+          {isDesktop ? (
+            <Grid item xs={12} style={{marginTop: '30vh'}} />
+          ) : (
+            null
+          )}
+          <Grid item style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}>
+            <img src={`https://image.tmdb.org/t/p/w154/${movie.poster_path}`} alt='Poster Img' style={{marginTop: isDesktop ? (null) : ('0.35em')}}/>
           </Grid>
-          <Grid item xs={12} sm container >
-            <Grid item xs container spacing={2} >
-              <Grid item xs={7} style={{background: 'rgba(0, 0, 0, 0.5)'}}>
-                <Typography gutterBottom variant="h4" className={classes.text} >
-                  {movie.title}
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center'
-                    }}
-                  >
-                    <StarRateIcon  className={classes.text} />
-                    <Typography variant='overline' className={classes.text} >
-                      {movie.vote_average}
-                    </Typography>
-                  </div>  
-                </Typography>
-                <Typography gutterBottom className={classes.text} >
-                  {movie.overview}
-                </Typography>
-                {stars ? 
-                  <Typography gutterBottom className={classes.text} >
-                    Top Billed Cast: {stars}
-                  </Typography> :
-                  null
-                }
-                <Typography gutterBottom className={classes.text}>
-                  {movie.genres.map(genre => {
-                    if (movie.genres[movie.genres.length - 1] === genre) {
-                      return genre.name
-                    } 
-                    return genre.name + ' | '
-                  })}
-                </Typography>
+          <Grid item xs={isDesktop ? 6 : 12} spacing={3} style={isDesktop ? {background: 'rgba(0, 0, 0, 0.5)'} : null}>
+            <Typography gutterBottom variant="h4" className={classes.text} >
+              {movie.title} | 
+              <StarRateIcon  className={classes.text} />
+              {movie.vote_average}
+            </Typography>
+            <Typography gutterBottom className={classes.text} >
+              {movie.overview}
+            </Typography>
+            {stars ? 
+              <Typography gutterBottom className={classes.text} >
+                Top Billed Cast: {stars}
+              </Typography> :
+              null
+            }
+            <Typography gutterBottom className={classes.text}>
+              {movie.genres.map(genre => {
+                if (movie.genres[movie.genres.length - 1] === genre) {
+                  return genre.name
+                } 
+                return genre.name + ' | '
+              })}
+            </Typography>
+          </Grid>
+          {youtubeLink ?
+            (
+              <Grid item style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}>
+                <ReactPlayer
+                  style={{
+                    maxWidth: '100vw'
+                  }}
+                  url={youtubeLink}
+                /> 
               </Grid>
-              {youtubeLink ?
-                (
-                  <Grid item>
-                    <ReactPlayer
-                      url={youtubeLink}
-                    /> 
-                  </Grid>
-                ) : (
-                  null
-                )
-              }
-            </Grid>
-          </Grid>
+            ) : (
+              null
+            )
+          }
         </Grid> ) : (
           null
         )
