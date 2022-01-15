@@ -17,9 +17,14 @@ const useQuery = () => {
   if (param.has('search')) {
     return param.get('search');
   }
-}
+};
 
-export default function Home({ ratingRange, allMovies, setAllMovies, setError }) {
+export default function Home({
+  ratingRange,
+  allMovies,
+  setAllMovies,
+  setError,
+}) {
   const query = useQuery();
   const classes = useStyles();
 
@@ -27,7 +32,9 @@ export default function Home({ ratingRange, allMovies, setAllMovies, setError })
 
   const getNewMovies = async (query) => {
     const modifiedMovieQuery = encodeURIComponent(query);
-    let response = await fetch(`${process.env.REACT_APP_BASE_SEARCH_URL}/movie?api_key=${process.env.REACT_APP_API_KEY}&language=en-US&query=${modifiedMovieQuery}&page=1&include_adult=true`);
+    let response = await fetch(
+      `${process.env.REACT_APP_BASE_SEARCH_URL}/movie?api_key=${process.env.REACT_APP_API_KEY}&language=en-US&query=${modifiedMovieQuery}&page=1&include_adult=true`
+    );
     response = await response.json();
     if (response.results.length === 0) {
       setError(true);
@@ -35,53 +42,53 @@ export default function Home({ ratingRange, allMovies, setAllMovies, setError })
       setError(false);
       setAllMovies(response.results);
     }
-  }
-  
+  };
+
   const getMovies = async () => {
-    let response = await fetch(`${process.env.REACT_APP_BASE_TMDB_URL}/popular?api_key=${process.env.REACT_APP_API_KEY}&language=en-US&page=1`);
+    let response = await fetch(
+      `${process.env.REACT_APP_BASE_TMDB_URL}/popular?api_key=${process.env.REACT_APP_API_KEY}&language=en-US&page=1`
+    );
     response = await response.json();
     setAllMovies(response.results);
     setFilteredMovies(response.results);
-  }
+  };
 
-  useEffect(() => {  
+  useEffect(() => {
     if (query) {
       getNewMovies(query);
     } else {
       getMovies();
     }
-  }, [query])
+  }, [query]);
 
   useEffect(() => {
     if (!allMovies) {
       getMovies();
     }
   }, []);
-  
+
   useEffect(() => {
     if (allMovies) {
-      const tempMovies = allMovies.filter(movie => movie.vote_average >= ratingRange[0] && movie.vote_average <= ratingRange[1]);
+      const tempMovies = allMovies.filter(
+        (movie) =>
+          movie.vote_average >= ratingRange[0] &&
+          movie.vote_average <= ratingRange[1]
+      );
       setFilteredMovies(tempMovies);
     }
   }, [ratingRange, allMovies]);
 
-  const generateMovieCards = () => {
-    const movieCards = [];
-    for (let i = 0; i < filteredMovies.length; i++) {
-      movieCards.push(<MovieCard movie={filteredMovies[i]} key={filteredMovies[i].id} />);
-    }
-    return movieCards;
-  }
-
   return (
     <div>
-      <Typography gutterBottom variant='h3' style={{marginTop: '0.35em'}}>
-        {query ? ('Results for ' + query) : ('Popular Movies')}
+      <Typography gutterBottom variant='h3' style={{ marginTop: '0.35em' }}>
+        {query ? 'Results for ' + query : 'Popular Movies'}
       </Typography>
       <Grid container className={classes.grid}>
         {allMovies.length ? (
-          generateMovieCards()
-        ): (
+          filteredMovies.map((movie) => (
+            <MovieCard movie={movie} key={movie.id} />
+          ))
+        ) : (
           <CircularProgress />
         )}
       </Grid>

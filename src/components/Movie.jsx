@@ -10,6 +10,7 @@ const useStyles = makeStyles({
   backdrop: {
     width: 'calc(100vw - 5px)',
     maxHeight: '100vh',
+    height: '100%',
     position: 'absolute',
     zIndex: -2,
     filter: 'brightness(50%)'
@@ -82,7 +83,7 @@ export default function MovieDialog(props) {
             <img
               className={classes.backdrop}
               alt='A nice Backdrop :)'
-              src={movie.backdrop_path ? `https://image.tmdb.org/t/p/w500/${movie.backdrop_path}` : `https://images.unsplash.com/photo-1574267432553-4b4628081c31?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2089&q=80`}
+              src={movie.backdrop_path ? `https://image.tmdb.org/t/p/original${movie.backdrop_path}` : `https://images.unsplash.com/photo-1574267432553-4b4628081c31?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2089&q=80`}
             />
           ) : (
             null
@@ -97,7 +98,7 @@ export default function MovieDialog(props) {
             justifyContent: 'center',
             alignItems: 'center'
           }}>
-            <img src={`https://image.tmdb.org/t/p/w154/${movie.poster_path}`} alt='Poster Img' style={{marginTop: isDesktop ? (null) : ('0.35em')}}/>
+            <img src={`https://image.tmdb.org/t/p/w154${movie.poster_path}`} alt='Poster Img' style={{marginTop: isDesktop ? (null) : ('0.35em')}}/>
           </Grid>
           <Grid item xs={isDesktop ? 6 : 12} spacing={3} style={isDesktop ? {background: 'rgba(0, 0, 0, 0.5)'} : null}>
             <Typography gutterBottom variant="h4" className={classes.text} >
